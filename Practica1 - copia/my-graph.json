@@ -1,0 +1,26 @@
+{
+	"@context": "https://schema.org/",
+	"@type": "webapi",
+	"@id": "http://event.com/graphql",
+	"name": "Events API",
+	"description":"Descripción de la API",
+	"provider": [{
+		"@type": "Person",
+		"name": "Daniel ",
+		"familyName": "Alarcón",
+		"email": "al38616@uji.es"
+			},
+	{
+		"@type": "Person",
+		"name": "Carlos",
+		"familyName": "Domenech",
+		"email": "al387323@uji.es"
+	}],
+	"audience": {
+		"@type": "Audience",
+		"audienceType": "Diseñada para todos los públicos",
+		"geographicArea": "Spain",
+		"description": "Aplicación pensada para todo tipo de personas independientemente de su edad"
+	},
+	"category": "Ocio"
+}

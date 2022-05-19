@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+
+    <title>Eventos</title>
+
+    <!-- Required Stylesheets -->
+    <link type="text/css" rel="stylesheet" href="https://unpkg.com/bootstrap/dist/css/bootstrap.min.css"/>
+    <link type="text/css" rel="stylesheet" href="https://unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.css"/>
+
+    <!-- Required scripts -->
+    <script src="//cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.min.js"></script>
+    <script src="//unpkg.com/babel-polyfill@latest/dist/polyfill.min.js"></script>
+    <script src="//unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.js"></script>
+    <!-- <script src="../scripts/addUser.js"></script>-->
+  </head>
+  <body>
+  <h1>Añadir usuario</h1>
+  <form id="user" @submit="addUser" action="https://vuejs.org/" method="POST">
+    <p>
+      <label for="name">Nombre</label>
+      <input id="name" v-model="name" type="text" name="name">
+    </p>
+    <p>
+      <label for="familyName">Apellidos</label>
+      <input id="familyName" v-model="familyName" type="text" name="familyName">
+    </p>
+    <p>
+      <label for="birthDate">Fecha de nacimiento</label>
+      <input id="birthDate" v-model="birthDate" type="text" name="birthDate">
+    </p>
+    <p>
+      <label for="gender">Género</label>
+      <input id="gender" v-model="gender" type="text" name="gender" >
+    </p>
+    <p>
+      <label for="preferences">Preferencias</label>
+      <input id="preferences" v-model="preferences" type="text" name="preferences">
+    </p>
+    <p>
+      <input type="submit" value="Enviar">
+    </p>
+  </form>
+
+  <h1>Añadir evento</h1>
+  <form id="event" @submit="addEvent" action="https://vuejs.org/" method="POST">
+    <p>
+      <label for="about">Titulo</label>
+      <input id="about" v-model="about" type="text" name="about">
+    </p>
+    <p>
+      <label for="startDate">Fecha</label>
+      <input id="startDate" v-model="startDate" type="text" name="startDate">
+    </p>
+    <p>
+      <label for="location">Lugar</label>
+      <input id="location" v-model="location" type="text" name="location">
+    </p>
+    <p>
+      <label for="duration">Duración</label>
+      <input id="duration" v-model="duration" type="text" name="duration" >
+    </p>
+    <p>
+      <input type="submit" value="Enviar">
+    </p>
+  </form>
+
+ <!-- <h2>Probando</h2>
+    <b-form-group label="Dime un identificador">
+      <b-form-input v-model.trim="identifier" placeholder="... por ejemplo 1" 
+        @keyup.enter="searchUser">
+      </b-form-input>
+    </b-form-group>
+
+    <div v-if="users.length>0">
+      <b-card>
+        <ul>
+          <p v-for="user in users">
+            <p>{{user.name}}</p>
+          </p>
+        </ul>
+      </b-card>
+    </div> -->
+   
+ 
+
+    <!-- Start running your app -->
+    <script>
+      window.app  = new Vue({
+        el: '#event',
+        data: {
+          about:   '', //nombre de usuario (no se usa)
+          startDate:   '',
+          location:   '',
+          duration: 0 ,
+          identifier:  4
+        },
+        methods:{
+          addEvent(){
+            this.identifier++
+  
+            var gQL = `mutation{
+                  addEvent(
+                    identifier:"${this.identifier}",
+                    about: "${this.about}",
+                    startDate: "${this.startDate}",
+                    location: "${this.location}",
+                    duration: ${parseInt(this.duration)})
+                    {identifier}
+            }`
+            console.log(gQL)
+            fetch('/graphql', {
+              method: 'POST',
+              headers: {'Content-Type': 'application/json'},
+              body: JSON.stringify({ query: gQL })
+            })
+                    .then(function(r){return r.json()})
+                    .then(function(json){console.log(json)})
+                    .catch(function(error){console.log(error)})
+          },
+        },
+      })
+      console.log(typeof(parseInt(this.duration)))
+    </script>
+    <script>
+      window.app  = new Vue({
+        el: '#user',
+        data: {
+          name: '', //nombre de usuario (no se usa)
+          familyName:   '',
+          birthDate:   '',
+          gender:   '',
+          preferences: '',
+          identifier:  30
+        },
+        methods:{
+          addUser(){
+            this.identifier++
+  
+            var gQL = `mutation{
+                  addUser(
+                    identifier:"${this.identifier}",
+                    name: "${this.name}",
+                    familyName: "${this.familyName}",
+                    birthDate: "${this.birthDate}",
+                    gender: "${this.gender}",
+                    preferences: "${this.preferences}")
+                    {identifier}
+            }`
+            console.log(gQL)
+            fetch('/graphql', {
+              method: 'POST',
+              headers: {'Content-Type': 'application/json'},
+              body: JSON.stringify({ query: gQL })
+            })
+                    .then(function(r){return r.json()})
+                    .then(function(json){console.log(json)})
+                    .catch(function(error){console.log(error)})
+          },
+        },
+      })
+    </script>
+<script>
+  window.app  = new Vue({
+    el: '#searchUser',
+    data: {
+      users: [{name: "Carlos"}]
+    },
+    methods:{
+      searchUser(){
+            var self = this
+            var gQL = `query{searchUser(idUser:${this.identifier}){name}}`
+
+            fetch('/graphql?query=' + encodeURIComponent(gQL))
+            .then(function(r){return r.json()})
+            .then(function(json){
+              self.users = json.data.searchUser
+            })
+            .catch(function(error){console.log(error)})
+      },
+    },
+  })
+
+</script>
+
+  </body>
+</html>
